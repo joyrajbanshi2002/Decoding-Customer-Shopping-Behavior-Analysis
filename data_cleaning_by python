@@ -1,0 +1,85 @@
+#Data Cleaning By Python
+
+#project_1 customer_shopping_behavior_analysis
+
+from google.colab import files
+uploaded = files.upload()
+
+import  pandas as pd
+
+df= pd.read_csv('customer_shopping_behavior.csv')
+df.head()
+
+df.describe(include = "all")
+
+print(df.info)
+
+# getting Null Values
+
+df.isnull().sum()
+
+df['Review Rating'] = df.groupby('Category')['Review Rating'].transform(lambda x: x.fillna(x.median())
+)
+#['Review Rating']
+#From each group, only the "Review Rating" column is selected.
+
+#.transform(...)
+#transform() applies an operation to each group and returns data in the same size as the original dataframe.
+#So the dataframe shape stays unchanged.
+
+#lambda x: x.fillna(x.median())
+#Here:
+#x = ratings of one category group
+#x.median() = median value of that group
+#fillna() replaces missing values with the median
+
+#Simple Meaning
+# “Fill missing review ratings using the median rating of their own category.”
+
+#Median is useful because it is less affected by extreme values (outliers).
+
+df.isnull().sum()
+
+#formating all the name is proper manner .so that there is no issu while calling the items,, as python is  case sensitive
+#“Convert all column names to lowercase, replace spaces with _, and rename one long column name to a shorter cleaner name.”
+
+df.columns = df.columns.str.lower()
+df.columns = df.columns.str.replace(' ','_')
+df = df.rename(columns={"purchase_amount_(usd)":"purchase_amount"})
+
+df.columns
+
+# create a column age_group ['age_group']
+
+labels = ["Young Adult", "Adult", "Middle-aged", "Senior"]
+df['age_group'] = pd.qcut(df['age'], q=4 , labels=labels)
+
+#pd.qcut()-Divide data into equal-sized groups based on distribution.
+#means divide ages into 4 equal groups (quartiles).
+#simple meaning-Create age categories by splitting the age data into 4 equally distributed groups.”
+
+df[['age','age_group']].head(10)
+
+# create column purchase_frequency_days
+
+frequency_mapping = {"Fornighty": 14, "Weekly": 7, "Monthly": 30, "Quaterly": 90, "Bi-Weekly":14,"Annually":365,"Every 3 Months":90}
+df["purchase_frequency_days"]=df['frequency_of_purchases'].map(frequency_mapping)
+
+#This code converts purchase frequency text values into the number of days.
+#The map() function is used to apply a function to every item in a sequence (like a list, tuple, etc.).
+#map() replaces or transforms each value in a Pandas column one by one.
+
+df[["purchase_frequency_days","frequency_of_purchases"]].head(10)
+
+#“Show the first 10 rows of purchase frequency text and their corresponding day values.”
+
+df[['discount_applied','promo_code_used']].head(10)
+
+#“Display the first 10 rows of the discount_applied and promo_code_used columns.”
+
+(df["discount_applied"] == df["promo_code_used"]).all()
+
+df = df.drop('promo_code_used',axis=1)
+#Delete the promo_code_used column from the dataframe.”
+
+df.columns
