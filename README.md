@@ -1,4 +1,4 @@
-# Customer-Shopping-Behavior-Analysis
+# Decoding Customer-Shopping-Behavior-Analysis
 
 This project analyzes customer shopping behavior using Python, PostgreSQL, and Power BI to uncover insights from 3,900+ customer transactions. The analysis focuses on customer demographics, purchase patterns, product preferences, discount usage, subscription behavior, and revenue trends.
 
